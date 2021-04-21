@@ -14,7 +14,7 @@ module.exports = (app) => {
     })
   }
 
-  const logout = (req, res)  => {
+  const logout = (req, res) => {
     req.session["profile"] = {}
     const currentUser = req.session["profile"]
     res.send(currentUser)
@@ -34,10 +34,13 @@ module.exports = (app) => {
     })
   }
 
-
   const profile = (req, res) => {
-    const currentUser = req.session["profile"]
-    res.send(currentUser)
+    if (req.session["profile"] !== undefined && req.session["profile"] !== {}) {
+      const currentUser = req.session["profile"]
+      res.send(currentUser)
+    } else {
+      res.send("0")
+    }
   }
 
   const findAllUsers = (req, res) => {
@@ -53,10 +56,33 @@ module.exports = (app) => {
     })
   }
 
+  const findRecentNewUsers = (req, res) => {
+    usersService.findRecentNewUsers().then((users) => {
+      res.send(users)
+    })
+  }
+
+  const updateProfile = (req, res) => {
+    const user = req.body
+    usersService.updateProfile(user).then((user) => {
+      res.send(user)
+    })
+  }
+
+  const follow = (req, res) => {
+    const userVisitedId = req.params.userVisitedId
+    const currentUserId = req.params.currentUserId
+    usersService.follow(userVisitedId, currentUserId).then((result)=>
+        res.send(result))
+  }
+
   app.post("/api/users/logout", logout)
   app.post("/api/users/profile", profile)
   app.post("/api/users/login", login)
   app.post("/api/users/register", register)
   app.get("/api/users/:id", findUserById)
   app.get("/api/users", findAllUsers)
+  app.post("/api/users/new", findRecentNewUsers)
+  app.post("/api/users/update", updateProfile)
+  app.post("/api/users/follow/:userVisitedId/:currentUserId", follow)
 }

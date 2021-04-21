@@ -31,5 +31,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 require("./controllers/users-controller")(app)
+require("./controllers/drinks-controller")(app)
+require("./controllers/reviews-controller")(app)
+require("./controllers/admins-controller")(app)
 
 app.listen(4000)

@@ -20,10 +20,27 @@ const findUserById = (id) => {
   return usersDao.findUserById(id)
 }
 
+const findRecentNewUsers = () => {
+  return usersDao.findRecentNewUsers()
+}
+
+const updateProfile = (user) => {
+  return usersDao.updateProfile(user)
+}
+
+const follow = (userVisitedId, currentUserId) => {
+  return usersDao.follow(userVisitedId, currentUserId)
+}
+
+
+
 module.exports = {
   findAllUsers,
   createUser,
   findUserById,
   findUserByUsername,
-  findUserByCredentials
+  findUserByCredentials,
+  findRecentNewUsers,
+  updateProfile,
+  follow
 }
