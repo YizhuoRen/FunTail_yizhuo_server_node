@@ -20,9 +20,19 @@ const deleteReview = (reviewId) => {
   return reviewsModel.deleteOne({_id: reviewId})
 }
 
+const deleteReviewByCreator = (userId) => {
+  return reviewsModel.deleteMany({creator: userId})
+}
+
+const deleteReviewsOfDrink = (drinkId) => {
+  return reviewsModel.deleteMany({drink: drinkId})
+}
+
 module.exports = {
   createReview,
   findReviewsForDrink,
   findReviewsByCreator,
-  deleteReview
+  deleteReview,
+  deleteReviewByCreator,
+  deleteReviewsOfDrink
 }

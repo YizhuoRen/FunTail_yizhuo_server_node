@@ -6,7 +6,7 @@ module.exports = (app) => {
     const credentials = req.body
     adminsService.findAdminByCredentials(credentials).then((actualAdmin) => {
       if (actualAdmin) {
-        req.session["profile"] = actualAdmin
+        req.session["adminPage"] = actualAdmin
         res.send(actualAdmin)
       } else {
         res.send("0")
@@ -15,9 +15,9 @@ module.exports = (app) => {
   }
 
 
-  const profile = (req, res) => {
-    if (req.session["profile"] !== undefined && req.session["profile"] !== {}) {
-      const currentAdmin = req.session["profile"]
+  const adminPage = (req, res) => {
+    if (req.session["adminPage"] !== undefined && req.session["adminPage"] !== {}) {
+      const currentAdmin = req.session["adminPage"]
       res.send(currentAdmin)
     } else {
       res.send("0")
@@ -25,8 +25,8 @@ module.exports = (app) => {
   }
 
   const logout = (req, res) => {
-    req.session["profile"] = {}
-    const currentAdmin = req.session["profile"]
+    req.session["adminPage"] = {}
+    const currentAdmin = req.session["adminPage"]
     res.send(currentAdmin)
   }
 
@@ -49,7 +49,7 @@ module.exports = (app) => {
   app.post("/api/admins/logout", logout)
   app.post("/api/admins/login", login)
   app.post("/api/admins/create", createAdmin)
-  app.post("/api/admins/admin", profile)
+  app.post("/api/admins/admin", adminPage)
 
   // app.get("/api/users/:id", findUserById)
   // app.get("/api/users", findAllUsers)

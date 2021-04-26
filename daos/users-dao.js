@@ -1,8 +1,8 @@
 const usersModel = require("../models/users/users-model");
 const mongoose = require("mongoose");
 
-const findUserByUsername = (username) => {
-  return usersModel.find({username})
+const findUserByName = (username) => {
+  return usersModel.find({username: {"$regex": username, "$options": "i"}})
 }
 
 const findUserByCredentials = (credentials) => {
@@ -23,6 +23,15 @@ const findUserById = (userId) => {
   populate("followers").exec()
 }
 
+const deleteUser = (userId) => {
+  return usersModel.findByIdAndRemove(userId)
+}
+
+
+const findUserByIdNoPopulate = (userId) => {
+  return usersModel.findById(userId)
+}
+
 const findRecentNewUsers = () => {
   return usersModel.find().sort({_id:-1}).limit(10);
 }
@@ -40,13 +49,28 @@ const follow = (userVisitedId, currentUserId) => {
 }
 
 
+const unfollow = (userVisitedId, currentUserId) => {
+  return usersModel.updateOne({_id: userVisitedId},
+      {$pull: {followers: currentUserId}}).then(() =>
+      usersModel.updateOne({_id: currentUserId},
+          {$pull: {following: userVisitedId}})
+  )
+}
+
+
+
+
+
 module.exports = {
   findAllUsers,
   createUser,
   findUserById,
-  findUserByUsername,
+  findUserByName,
   findUserByCredentials,
   findRecentNewUsers,
   updateProfile,
-  follow
+  follow,
+  unfollow,
+  findUserByIdNoPopulate,
+  deleteUser
 }

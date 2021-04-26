@@ -35,6 +35,8 @@ module.exports = (app) => {
   }
 
 
+
+
   const deleteReview = (req, res) => {
     const reviewId = req.params.reviewId
     reviewsService.deleteReview(reviewId).then((result)=> {
@@ -42,8 +44,11 @@ module.exports = (app) => {
     })
   }
 
+
+
+
   app.post("/api/drinks/:drinkId/review", createReview)
-  app.get("/api/drinks/:drinkId/reviews", findReviewsForDrink)
+  app.get("/api/reviews/:drinkId", findReviewsForDrink)
   app.get("/api/users/:userId/reviews", findReviewsByCreator)
   app.delete("/api/reviews/:reviewId", deleteReview)
 

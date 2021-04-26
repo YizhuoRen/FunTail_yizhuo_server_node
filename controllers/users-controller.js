@@ -1,6 +1,9 @@
 module.exports = (app) => {
 
   const usersService = require("../services/users-service")
+  const reviewsService = require("../services/reviews-service")
+  const drinksService = require("../services/drinks-service")
+  const usersModel = require("../models/users/users-model");
 
   const login = (req, res) => {
     const credentials = req.body
@@ -22,7 +25,7 @@ module.exports = (app) => {
 
   const register = (req, res) => {
     const credentials = req.body
-    usersService.findUserByUsername(credentials.username).then((actualUser) => {
+    usersService.findUserByName(credentials.username).then((actualUser) => {
       if (actualUser.length > 0) {
         res.send("0")
       } else {
@@ -56,6 +59,38 @@ module.exports = (app) => {
     })
   }
 
+  const deleteUser = (req, res) => {
+    const id = req.params.id
+    usersModel.findById(id).then(user => {
+      if (user.following.length > 0) {
+        user.following.map((singleFollowing) => {
+          usersModel.updateOne({_id: singleFollowing},
+              {$pull: {followers: id}}).then(() => {
+          })
+        })
+      }
+      if (user.followers.length > 0) {
+        user.followers.map((follower) => {
+          usersModel.updateOne({_id: follower},
+              {$pull: {following: id}}).then(() => {
+          })
+        })
+      }
+    })
+    usersService.deleteUser(id).then((result) => {
+      reviewsService.deleteReviewByCreator(id).then(()=>{})
+      drinksService.deleteDrinkByCreator(id).then(()=>{})
+      res.send(result)
+    })
+  }
+
+  const findUserByName = (req, res) => {
+    const username = req.params.username
+    usersService.findUserByName(username).then((user) => {
+      res.send(user)
+    })
+  }
+
   const findRecentNewUsers = (req, res) => {
     usersService.findRecentNewUsers().then((users) => {
       res.send(users)
@@ -65,6 +100,7 @@ module.exports = (app) => {
   const updateProfile = (req, res) => {
     const user = req.body
     usersService.updateProfile(user).then((user) => {
+      req.session["profile"] = user;
       res.send(user)
     })
   }
@@ -72,17 +108,47 @@ module.exports = (app) => {
   const follow = (req, res) => {
     const userVisitedId = req.params.userVisitedId
     const currentUserId = req.params.currentUserId
-    usersService.follow(userVisitedId, currentUserId).then((result)=>
-        res.send(result))
+    usersService.follow(userVisitedId, currentUserId).then((result)=> {
+      usersService.findUserById(currentUserId).then((user) =>
+          req.session["profile"] = user)
+      res.send(result)
+  })
   }
+
+  const unfollow = (req, res) => {
+    const userVisitedId = req.params.userVisitedId
+    const currentUserId = req.params.currentUserId
+    usersService.unfollow(userVisitedId, currentUserId).then((result)=> {
+      // usersService.findUserById(currentUserId).then((user) =>
+      //     req.session["profile"] = user)
+      res.send(result)
+    })
+  }
+
+  const checkFollowingState = (req, res) => {
+    const userVisitedId = req.params.userVisitedId
+    const currentUserId = req.params.currentUserId
+    usersService.findUserByIdNoPopulate(userVisitedId).then((userVisited) => {
+      if (userVisited.followers.includes(currentUserId)) {
+        res.send("1")
+      } else {
+        res.send("0")
+      }
+    })
+}
+
 
   app.post("/api/users/logout", logout)
   app.post("/api/users/profile", profile)
   app.post("/api/users/login", login)
   app.post("/api/users/register", register)
-  app.get("/api/users/:id", findUserById)
+  app.post("/api/users/user/:id", findUserById)
+  app.delete("/api/users/:id", deleteUser)
+  app.get("/api/users/username/:username", findUserByName)
   app.get("/api/users", findAllUsers)
   app.post("/api/users/new", findRecentNewUsers)
   app.post("/api/users/update", updateProfile)
   app.post("/api/users/follow/:userVisitedId/:currentUserId", follow)
+  app.post("/api/users/unfollow/:userVisitedId/:currentUserId", unfollow)
+  app.post("/api/users/:userVisitedId/:currentUserId", checkFollowingState)
 }

@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require("mongoose");
 
+
 const session = require('express-session')
 app.use(session({
   secret: 'keyboard cat',
@@ -28,7 +29,6 @@ app.use(function (req, res, next) {
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(bodyParser.json());
 
 require("./controllers/users-controller")(app)
 require("./controllers/drinks-controller")(app)

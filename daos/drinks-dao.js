@@ -5,11 +5,11 @@ const findDrinksByCreator = (userId) => {
 }
 
 const findDrinkById = (id) => {
-  return drinksModel.findById(id)
+  return drinksModel.findById(id).populate("creator").exec()
 }
 
 const findDrinksByName = (name) => {
-  return drinksModel.find({strDrink: name})
+  return drinksModel.find({strDrink: {"$regex": name, "$options": "i"}})
 }
 
 const findAllDrinks = () => {
@@ -24,10 +24,19 @@ const deleteDrink = (drinkId) => {
   return drinksModel.deleteOne({_id: drinkId})
 }
 
+const updateDrink = (updatedDrink) => {
+  return drinksModel.updateOne({_id: updatedDrink._id}, updatedDrink)
+}
 
 const findDrinksOfRecent = () => {
   return drinksModel.find().sort({_id:-1}).limit(15);
 }
+
+const deleteDrinkByCreator = (userId) => {
+  return drinksModel.deleteMany({creator: userId})
+}
+
+
 
 module.exports = {
   findDrinksByCreator,
@@ -36,5 +45,7 @@ module.exports = {
   createDrink,
   deleteDrink,
   findDrinkById,
-  findDrinksOfRecent
+  findDrinksOfRecent,
+  deleteDrinkByCreator,
+  updateDrink
 }

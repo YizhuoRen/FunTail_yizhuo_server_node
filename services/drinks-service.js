@@ -25,9 +25,19 @@ const deleteDrink = (drinkId) => {
   return drinksDao.deleteDrink(drinkId)
 }
 
+const updateDrink = (updatedDrink) => {
+  return drinksDao.updateDrink(updatedDrink)
+}
+
 const findDrinksOfRecent = () => {
   return drinksDao.findDrinksOfRecent()
 }
+
+const deleteDrinkByCreator = (userId) => {
+  return drinksDao.deleteDrinkByCreator(userId)
+}
+
+
 
 
 
@@ -38,5 +48,8 @@ module.exports = {
   createDrink,
   findDrinkById,
   findDrinksOfRecent,
-  deleteDrink
+  deleteDrink,
+  deleteDrinkByCreator,
+  findDrinksByName,
+  updateDrink
 }

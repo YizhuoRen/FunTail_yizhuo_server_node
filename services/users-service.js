@@ -8,9 +8,7 @@ const findAllUsers = () => {
   return usersDao.findAllUsers()
 }
 
-const findUserByUsername = (username) => {
-  return usersDao.findUserByUsername(username)
-}
+
 
 const createUser = (user) => {
    return usersDao.createUser(user)
@@ -18,6 +16,20 @@ const createUser = (user) => {
 
 const findUserById = (id) => {
   return usersDao.findUserById(id)
+}
+
+const deleteUser = (id) => {
+  return usersDao.deleteUser(id)
+}
+
+
+
+const findUserByName = (username) => {
+  return usersDao.findUserByName(username)
+}
+
+const findUserByIdNoPopulate = (id) => {
+  return usersDao.findUserByIdNoPopulate(id)
 }
 
 const findRecentNewUsers = () => {
@@ -33,14 +45,21 @@ const follow = (userVisitedId, currentUserId) => {
 }
 
 
+const unfollow = (userVisitedId, currentUserId) => {
+  return usersDao.unfollow(userVisitedId, currentUserId)
+}
+
 
 module.exports = {
   findAllUsers,
   createUser,
   findUserById,
-  findUserByUsername,
   findUserByCredentials,
   findRecentNewUsers,
   updateProfile,
-  follow
+  follow,
+  unfollow,
+  findUserByIdNoPopulate,
+  findUserByName,
+  deleteUser
 }
