@@ -1,7 +1,10 @@
 const express = require('express')
 const app = express()
 const mongoose = require("mongoose");
-
+require('dotenv').config()
+const uri = process.env.MONGODB_URI;
+mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}).then(res => console.log("Connected to DB"))
+.catch(err => console.log(err))
 
 const session = require('express-session')
 app.use(session({
@@ -35,4 +38,4 @@ require("./controllers/drinks-controller")(app)
 require("./controllers/reviews-controller")(app)
 require("./controllers/admins-controller")(app)
 
-app.listen(4000)
+app.listen(process.env.PORT||4000)
