@@ -54,10 +54,11 @@ const findTotalDrinkByName = (req, res) => {
         fetch(
             `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drinkName}`).then(
             response => response.json()).then(
-            drinksObject => drinksObject.drinks.map((drink) => {
+            drinksObject => {
+                if (drinksObject.drinks !==null && drinksObject.drinks.length> 0) {drinksObject.drinks.map((drink) => {
               webApiDrinksModel.create(drink);
               drinks.push(drink)
-            })).then(() => res.send(drinks))
+            });}}).then(() => res.send(drinks))
       })
   )
   // drinksService.findDrinksByName(drinkName).then((drinks)=> {
