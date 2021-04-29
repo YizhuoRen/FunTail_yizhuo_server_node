@@ -3,10 +3,11 @@ const app = express()
 const mongoose = require("mongoose");
 require('dotenv').config()
 const uri = process.env.MONGODB_URI;
+const origin = process.env.ORIGIN_URI;
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}).then(res => console.log("Connected to DB"))
 .catch(err => console.log(err))
 const cors = require("cors");
-app.use(cors({credentials: true, origin: "*"}));
+app.use(cors({credentials: true, origin: origin}));
 
 const session = require('express-session')
 app.use(session({
@@ -44,5 +45,5 @@ require("./controllers/admins-controller")(app)
 app.get("/*", function (req, res) {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 })
-
-app.listen(process.env.PORT||4000)
+app.listen(4000)
+// app.listen(process.env.PORT||4000)

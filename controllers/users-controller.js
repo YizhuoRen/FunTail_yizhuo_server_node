@@ -4,6 +4,7 @@ module.exports = (app) => {
   const reviewsService = require("../services/reviews-service")
   const drinksService = require("../services/drinks-service")
   const usersModel = require("../models/users/users-model");
+  const mongoose = require("mongoose");
 
   const login = (req, res) => {
     const credentials = req.body
@@ -53,7 +54,7 @@ module.exports = (app) => {
   }
 
   const findUserById = (req, res) => {
-    const id = req.params.id
+    const id = req.body.id
     usersService.findUserById(id).then((user) => {
       res.send(user)
     })

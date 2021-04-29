@@ -18,12 +18,6 @@ module.exports = (app) => {
     })
   }
 
-  const findDrinksByName = (req, res) => {
-    const name = req.params.name
-    drinksService.findDrinksByName(name).then((drinks) => {
-      res.send(drinks)
-    })
-  }
 
   const createDrink = (req, res) => {
     const drink = req.body
@@ -47,7 +41,7 @@ module.exports = (app) => {
 
 
 const findDrinkByName = (req, res) => {
-  const drinkName = req.params.drinkName
+  const drinkName = req.body.drinkName
   drinksService.findDrinksByName(drinkName).then((drinks) => {
     res.send(drinks)
   })
@@ -99,12 +93,11 @@ const updateDrink = (req, res) => {
 }
 
 app.post("/api/drinks/:userId/drink", createDrink)
-app.get("/api/drinks/:name", findDrinksByName)
 app.get("/api/users/:userId/drinks", findDrinksByCreator)
 app.get("/api/drinks", findAllDrinks)
 app.post("/api/drinks/:drinkId", findDrinkById)
 app.post("/api/drinks", findDrinksOfRecent)
-app.post("/api/drinks/name/:drinkName", findDrinkByName)
+app.post("/api/drinks/name/:name", findDrinkByName)
 app.delete("/api/drinks/:drinkId", deleteDrink)
 app.put("/api/drinks/:drinkId", updateDrink)
 app.post("/api/totalDrinks/name/:drinkName", findTotalDrinkByName)

@@ -19,8 +19,8 @@ const createUser = (user) => {
 }
 
 const findUserById = (userId) => {
-  return usersModel.findById(userId).populate("following").
-  populate("followers").exec()
+  return usersModel.findById(userId)
+  .populate("following").populate("followers").exec()
 }
 
 const deleteUser = (userId) => {
