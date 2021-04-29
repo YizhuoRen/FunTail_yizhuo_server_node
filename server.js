@@ -6,7 +6,7 @@ const uri = process.env.MONGODB_URI;
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}).then(res => console.log("Connected to DB"))
 .catch(err => console.log(err))
 const cors = require("cors");
-app.use(cors({credentials: true, origin: "https://wbdv-project-yz-client.herokuapp.com"}));
+app.use(cors({credentials: true, origin: "*"}));
 
 const session = require('express-session')
 app.use(session({
