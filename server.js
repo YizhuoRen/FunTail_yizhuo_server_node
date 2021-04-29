@@ -45,5 +45,5 @@ require("./controllers/admins-controller")(app)
 app.get("/*", function (req, res) {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 })
-app.listen(4000)
-// app.listen(process.env.PORT||4000)
+// app.listen(4000)
+app.listen(process.env.PORT||4000)
